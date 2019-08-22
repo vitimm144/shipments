@@ -6,4 +6,4 @@ static
 /frontend/nbproject*
 *.bz2
 venv
-
+db.*
