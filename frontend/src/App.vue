@@ -1,7 +1,7 @@
 <template>
   <div id="app">
   
-    <h1 class="">Shipments</h1> <b-button block variant="success" v-b-modal.modal-shipment>Add</b-button>
+    <h1 >Shipments</h1> <b-button id="add-button" block variant="success" v-b-modal.modal-shipment>Add</b-button>
     <div>
         
     <b-modal ref="modal-shipment" id="modal-shipment" title="Shipment Add">
@@ -28,7 +28,7 @@
           label-align-sm="right"
           label-for="sender-address"
         >
-          <b-form-input id="sender-address" v-model="shipment.sender_address"></b-form-input>
+          <b-form-textarea id="sender-address" v-model="shipment.sender_address"></b-form-textarea>
         </b-form-group>
 
         <b-form-group
@@ -45,7 +45,7 @@
           label-align-sm="right"
           label-for="recipient-address"
         >
-          <b-form-input id="recipient-address" v-model="shipment.recipient_address"></b-form-input>
+          <b-form-textarea id="recipient-address" v-model="shipment.recipient_address"></b-form-textarea>
         </b-form-group>
 
         <b-form-group
@@ -100,10 +100,8 @@ export default {
         "postal_code":"",
         "shipment_code":""
       },
-      text:'',
+      items:[],
       endpoint:'http://localhost:8000/api/shipments/',
-      list:[{"text":"blabasadas", "name":"Victor"}],
-      msg: 'Welcome to Your Vue.js App',
       fields: [
         "id",
         "expedition",
@@ -115,7 +113,6 @@ export default {
         "shipment_code",
         "options" 
       ],
-      items: [],
       config: {
           headers: {
             'Content-Type': 'application/json'
@@ -127,13 +124,6 @@ export default {
     }
   },
   methods:{
-    addTodo(){
-      this.list.push({text: this.text})
-      this.text = ''
-    },
-    removeTodo(index){
-      this.list.slice(index, 1)
-    },
     saveShipment(){
       var method = 'post'
       var url = this.endpoint
@@ -143,30 +133,26 @@ export default {
       }
       this.$http[method](url, this.shipment, this.config).then(
         response => {
-          console.log(response)
-
           this.updateGrid()
           this.$refs['modal-shipment'].hide()
         },
         response => {
-          console.log(response)
+          console.error(response)
         }
         
       )
     },
     editShipment(item){
-      console.log(item)
       this.shipment = item
       this.$refs['modal-shipment'].show()
     },
     updateGrid(){
       this.$http.get(this.endpoint, this.config).then(
         response => {
-          console.log(response)
           this.items = response.data.results
         },
         response => {
-          console.log(response)
+          console.error(response)
         }
       )
     },
@@ -174,8 +160,10 @@ export default {
       var url = this.endpoint + item.id + '/'
       this.$http.delete(url, this.config).then(
         response => {
-          console.log(response)
           this.updateGrid()
+        },
+        response => {
+          console.error(response)
         }
       )
     }

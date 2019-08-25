@@ -1,5 +1,4 @@
-from django.conf.urls import url, include
-from rest_framework import routers, serializers, viewsets
+from rest_framework import serializers
 from core.models import Shipment
 
 
@@ -13,7 +12,8 @@ class ShipmentSerializer(serializers.ModelSerializer):
             "recipient_address",
             "sender_address",
             "postal_code",
-            "shipment_code"
+            "shipment_code",
+            "expedition"
         )
         read_only_fields = (
             "expedition",
